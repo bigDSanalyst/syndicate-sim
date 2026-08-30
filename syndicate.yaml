@@ -7,10 +7,11 @@ members:
   - name: "Test Researcher"
     github: "bigDSanalyst"
     orcid: "0000-0000-0000-0000"
-    email:51167247+bigDSanalyst@users.noreply.github.com
+    email: "51167247+bigDSanalyst@users.noreply.github.com"
     role: "theory"
     trust_tier: verified
     joined: "2026-08-30"
+
   - name: "Test Engineer"
     github: "satsolverv124"
     orcid: "0000-0000-0000-0000"
@@ -31,9 +32,9 @@ attribution:
   clock: "push-webhook"
   weights: {churn: 0.35, review: 0.25, prompts: 0.20, breadth: 0.20}
   exclude_authors_matching:
-    - "\\[bot\\]$"
-    - "ingest-bot@users\\.noreply\\.github\\.com$"
-    - "anchor-bot@users\\.noreply\\.github\\.com$"
+    - '\[bot\]$'
+    - "ingest-bot@users.noreply.github.com$"
+    - "anchor-bot@users.noreply.github.com$"
 
 exit:
   default_split: "per-ledger"
