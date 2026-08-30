@@ -1,0 +1,40 @@
+syndicate:
+  name: "Simulation Syndicate 01"
+  formed: "2026-08-30"
+  oracle_ref: "sim-0001"
+
+members:
+  - name: "Test Researcher"
+    github: "yourhandle"
+    orcid: "0000-0000-0000-0000"
+    email:51167247+bigDSanalyst@users.noreply.github.com
+    role: "theory"
+    trust_tier: verified
+    joined: "2026-08-30"
+  - name: "Test Engineer"
+    github: "peeraccount"
+    orcid: "0000-0000-0000-0000"
+    email: "87654321+peeraccount@users.noreply.github.com"
+    role: "systems"
+    trust_tier: verified
+    joined: "2026-08-30"
+
+governance:
+  decision_rule: "majority"
+  objection_window_days: 7
+  review_gates:
+    "vault/40-drafts/**": 1
+    "ledger/**": 2
+    "agreements/**": 2
+
+attribution:
+  clock: "push-webhook"
+  weights: {churn: 0.35, review: 0.25, prompts: 0.20, breadth: 0.20}
+  exclude_authors_matching:
+    - "\\[bot\\]$"
+    - "ingest-bot@users\\.noreply\\.github\\.com$"
+    - "anchor-bot@users\\.noreply\\.github\\.com$"
+
+exit:
+  default_split: "per-ledger"
+  archive_targets: [arxiv, zenodo]
