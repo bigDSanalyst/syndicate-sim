@@ -5,16 +5,16 @@ syndicate:
 
 members:
   - name: "Test Researcher"
-    github: "yourhandle"
+    github: "bigDSanalyst"
     orcid: "0000-0000-0000-0000"
     email:51167247+bigDSanalyst@users.noreply.github.com
     role: "theory"
     trust_tier: verified
     joined: "2026-08-30"
   - name: "Test Engineer"
-    github: "peeraccount"
+    github: "satsolverv124"
     orcid: "0000-0000-0000-0000"
-    email: "87654321+peeraccount@users.noreply.github.com"
+    email: "205302507+satsolverv124@users.noreply.github.com"
     role: "systems"
     trust_tier: verified
     joined: "2026-08-30"
