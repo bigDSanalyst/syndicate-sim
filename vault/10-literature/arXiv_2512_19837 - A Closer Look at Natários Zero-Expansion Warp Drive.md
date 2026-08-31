@@ -1,0 +1,37 @@
+---
+aliases: ["A Closer Look at Natário's Zero-Expansion Warp Drive"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2512.19837"
+url: "http://arxiv.org/abs/2512.19837v1"
+published: "2025-12-22T19:46:04Z"
+ingested: "2026-08-31T12:36:30Z"
+authors:
+  - "José Rodal"
+---
+
+# A Closer Look at Natário's Zero-Expansion Warp Drive
+
+## Abstract
+
+> We conduct a detailed analysis of Nat'{a}rio's ``zero-expansion'' warp drive spacetime, focusing
+> on scalar curvature invariants within the 3+1 formalism. This paper has four primary objectives:
+> First, we establish the Petrov type classification of Nat'{a}rio's spacetime, which has not been
+> previously determined in the literature. We prove that Nat'{a}rio's spacetime is Petrov type I,
+> not fitting the Class B warped product spacetime definition. Second, we assess the relative
+> magnitude of the Weyl scalar curvature invariant and compare it with the amplitudes of
+> Einstein's scalar and the Ricci quadratic and cubic invariants within the warp-bubble zone.
+> Previous studies have focused on Ricci curvature and the energy-momentum tensor, neglecting the
+> Weyl curvature, which we demonstrate plays a significant role due to the sharp localization of
+> the form function near the warp-bubble radius. Third, we visualize several curvature invariants
+> for Nat'{a}rio's warp drive, as well as momentum density, which we show as the critical physical
+> quantity governing the orientation of the warp drive trajectory, overshadowing space volume
+> changes. Fourth, we critically examine claims that Nat'{a}rio's warp drive is more realistic
+> than Alcubierre's. We demonstrate that Nat'{a}rio's spacetime exhibits curvature invariant
+> amplitudes 35 times greater than Alcubierre's, given identical warp-bubble parameters, making
+> Nat'{a}rio's concept even less viable. Additionally, we address Mattingly et al.'s analysis,
+> highlighting their underestimation of curvature invariant amplitudes by 21 orders of magnitude.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
