@@ -1,6 +1,6 @@
 ---
 aliases: ["A warp drive with predominantly positive invariant energy density and global Hawking-Ellis Type I"]
-tags: [literature/arxiv, status/triage]
+tags: [literature/arxiv, status/reading]
 arxiv_id: "2512.18008"
 url: "http://arxiv.org/abs/2512.18008v1"
 published: "2025-12-19T19:08:33Z"
