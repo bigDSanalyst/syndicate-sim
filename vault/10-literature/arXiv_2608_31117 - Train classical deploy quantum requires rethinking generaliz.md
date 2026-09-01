@@ -1,0 +1,42 @@
+---
+aliases: ["\"Train classical, deploy quantum\" requires rethinking generalization"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2608.31117"
+url: "http://arxiv.org/abs/2608.31117v1"
+published: "2026-08-31T17:26:27Z"
+ingested: "2026-09-01T11:02:33Z"
+authors:
+  - "Snehal Raj"
+  - "Natansh Mathur"
+  - "Alejandro Perdomo-Ortiz"
+---
+
+# "Train classical, deploy quantum" requires rethinking generalization
+
+## Abstract
+
+> Generative models have become central across science and industry, from image and text synthesis
+> to the design of molecules and materials. Quantum generative models are considered one of the
+> most promising applications for quantum computers, since a quantum circuit naturally produces
+> samples from the distribution it encodes, and for suitable circuits that distribution is
+> believed to be hard for any classical computer to reproduce. A leading strategy trains these
+> models on a classical computer and reserves the quantum device for generating samples at
+> deployment. This is possible when the training loss can be evaluated on a classical computer. A
+> prime example is the maximum mean discrepancy (MMD$^2$), a moment-matching loss that compares
+> the model and the data through their Pauli-$Z$ correlations. Research so far has asked whether
+> such models can be trained and whether their sampling is hard; whether minimizing such an
+> objective yields a model that generalizes, rather than one that merely reproduces the training
+> statistics, remains poorly understood. We benchmark a broad set of quantum and classical
+> generative models by direct sampling and show that models trained with a moment-matching loss
+> generally show worse generalization than the likelihood-trained models. We show this on two
+> application-inspired datasets: first a cardinality-constrained dataset at up to $30$ qubits and
+> second a dataset of genomic single-nucleotide variants, whose valid set is the observed data.
+> These results indicate that a converged moment-matching loss is not a reliable measure of
+> generalization, and that train-classical, deploy-quantum workflows will need approaches that
+> target generalization directly, leaving open whether better training objectives suffice or
+> whether the model architectures themselves must change.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
