@@ -5,3 +5,4 @@ data/raw/
 agents/mcp.json
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+*.ots.bak
