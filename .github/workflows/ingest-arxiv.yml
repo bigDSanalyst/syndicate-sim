@@ -14,6 +14,10 @@ jobs:
         with: {python-version: "3.12"}
       - run: pip install -r tools/requirements.txt
       - run: python tools/ingest_arxiv.py --config agents/queries.yaml --out vault/10-literature
+      - name: sync with any human pushes
+        run: |
+          git fetch origin "${{ github.ref_name }}"
+          git rebase "origin/${{ github.ref_name }}"
       - name: commit
         run: |
           git config user.name  "syndicate-ingest[bot]"
