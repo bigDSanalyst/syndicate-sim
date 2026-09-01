@@ -1,62 +1,35 @@
 #!/usr/bin/env python3
-"""Continuous priority anchoring for the syndicate vault.
+"""Continuous priority anchoring for the syndicate vault (v2, CLI-based).
 
 In a no-custody protocol, provable priority IS the enforcement layer
-(Consortium Agreement, section 7.4). A defecting member leaves with
-unanchored work; the team keeps a Bitcoin-attested record of everything
-that existed and when. Gaps in that record are what backdating attacks
-feed on, so the cadence is a heartbeat, not an event.
+(Agreement section 7.4). Each run writes a canonical-JSON manifest of git
+HEAD, tree hash, and sha256 of every ledger file; appends an entry to
+ledger/anchors/log.jsonl (an append-only hash chain over entry cores);
+and submits the manifest to OpenTimestamps calendars through the
+official ots command-line client.
 
-Each run writes a manifest (canonical JSON of git HEAD, tree hash, and
-sha256 of every ledger file) and appends one entry to
-ledger/anchors/log.jsonl - an append-only hash chain. The manifest is
-submitted to OpenTimestamps calendars; the .ots attestation lands in
-Bitcoin within ~1-2 hours and is upgraded on later runs.
+v2 replaced the python-opentimestamps library API with the ots CLI
+after release 0.4.5 broke imports and serialization silently. Status
+flow: unsubmitted -> (ots stamp) -> pending -> (ots upgrade + Bitcoin
+attestation) -> confirmed.
 
-The prev field of each entry holds the hash of the previous entry
-immutable core (seq, ids, hashes, created). Status fields are mutable
-bookkeeping and are deliberately excluded from the chain. Every Bitcoin
-stamp retroactively covers all earlier entries: tamper with any past
-manifest and every later stamp stops matching.
+The ots info output is the machine interface: the File sha256 hash line
+proves which bytes a stamp covers; a BitcoinBlockHeaderAttestation line
+marks Bitcoin confirmation. verify works on a bare file export (no git,
+no Bitcoin node); the ots CLI is needed only for .ots digest checks.
 
-Commands:
-  run~~~~~~~~~~~~~~~~~~~~~~anchor current HEAD (no-op if already anchored)
-  upgrade~~~~~~~~~~~~~~~~~~retry submissions + pull Bitcoin confirmations
-  verify~~~~~~~~~~~~~~~~~~~recompute digests, check chain, read attestations
-  milestone~~--tag~T~-m~M~~~anchor + annotated git tag for a human milestone
-
-verify proves structure and digest integrity without a Bitcoin node and
-works on a bare file export of the repo (a Zenodo snapshot). Full
-independent confirmation of an attestation is the ots verify command
-from opentimestamps-client against a local node. Anchors reflect
-committed state - commit before running milestone locally.
+Commands: run, upgrade, verify, milestone --tag T --message M.
 """
-
 import argparse
 import hashlib
 import json
+import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    from opentimestamps.calendar import RemoteCalendar
-    from opentimestamps.op import OpSHA256
-    from opentimestamps.timestamp import DetachedTimestampFile
-    try:
-        from opentimestamps.bitcoin import BitcoinAttestation
-    except ImportError:
-        BitcoinAttestation = None
-    HAVE_OTS = True
-except ImportError:
-    HAVE_OTS = False
-
-CALENDARS = [
-    "https://btc.calendar.opentimestamps.org",
-    "https://bob.btc.calendar.opentimestamps.org",
-    "https://finney.calendar.eternitywall.com",
-]
 STALE_DAYS = 14
 CORE_FIELDS = ["seq", "anchor_id", "git_head", "git_tree", "manifest", "manifest_sha256", "prev", "created"]
 
@@ -73,7 +46,7 @@ def sha256_bytes(b):
 
 
 def sha256_file(p):
-    return sha256_bytes(p.read_bytes())
+    return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
 def now():
@@ -85,7 +58,6 @@ def canonical(obj):
 
 
 def core_hash(entry):
-    """Hash of the immutable fields only - statuses may change, cores never."""
     return sha256_bytes(canonical({k: entry[k] for k in CORE_FIELDS}).encode())
 
 
@@ -113,19 +85,16 @@ def make_anchor(repo, anchors_dir, log_path):
     entries = load_log(log_path)
     state = repo_state(repo)
     head = state["git_head"]
-
     if any(e["git_head"] == head for e in entries):
         last = max(e["seq"] for e in entries if e["git_head"] == head)
-        print("⏭️  HEAD " + head[:12] + " already anchored (#" + format(last, "04d") + ") - skipping")
+        print("skip: HEAD " + head[:12] + " already anchored #" + format(last, "04d"))
         return None
-
     prev = entries[-1] if entries else None
     seq = (prev["seq"] + 1) if prev else 1
     anchor_id = format(seq, "04d") + "-" + datetime.now(timezone.utc).strftime("%Y-%m-%d")
     state["anchor_id"] = anchor_id
     manifest_path = anchors_dir / (anchor_id + ".json")
     manifest_path.write_bytes(canonical(state).encode())
-
     entry = {
         "seq": seq,
         "anchor_id": anchor_id,
@@ -139,44 +108,48 @@ def make_anchor(repo, anchors_dir, log_path):
     }
     with log_path.open("a") as f:
         f.write(canonical(entry) + "\n")
-    print("✅ anchor #" + format(seq, "04d") + " " + anchor_id + ": head " + head[:12] + ", " + str(len(state["ledger_files"])) + " ledger files")
+    print("anchor #" + format(seq, "04d") + " " + anchor_id + ": head " + head[:12] + ", " + str(len(state["ledger_files"])) + " ledger files")
     return entry
 
 
-def _load_ots(path):
-    with path.open("rb") as f:
-        return DetachedTimestampFile.from_file(f)
+def ots_cli():
+    path = shutil.which("ots")
+    if path is None:
+        print("ots CLI not found (pip install opentimestamps-client); entries recorded, stamps deferred")
+    return path
 
 
-def _save_ots(detached, path):
-    with path.open("wb") as f:
-        writer = getattr(detached, "write", None) or detached.to_file
-        writer(f)
-
-
-def _has_bitcoin(detached):
-    if BitcoinAttestation is None:
-        return False
+def run_ots(*args):
     try:
-        return any(isinstance(a, BitcoinAttestation) for a in detached.timestamp.attestations)
-    except Exception:
-        return False
+        return subprocess.run(["ots", *args], capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(args=[], returncode=1, stdout="", stderr="ots timed out")
 
 
-def _digest_hex(detached):
-    """python-opentimestamps returns file_digest as bytes; normalize to hex."""
-    d = getattr(detached, "file_digest", None)
-    if isinstance(d, bytes):
-        return d.hex()
-    if d is not None:
-        return str(d)
-    return ""
+def parse_info(text):
+    out = {"digest": None, "confirmed": False, "height": None}
+    if not text:
+        return out
+    m = re.search(r"File sha256 hash:\s*([0-9a-f]+)", text)
+    if m:
+        out["digest"] = m.group(1)
+    if "BitcoinBlockHeaderAttestation" in text:
+        out["confirmed"] = True
+        h = re.search(r"height\s+(\d+)", text)
+        if h:
+            out["height"] = int(h.group(1))
+    return out
+
+
+def info_for(ots_path):
+    r = run_ots("info", str(ots_path))
+    if r.returncode != 0:
+        return None
+    return r.stdout + r.stderr
 
 
 def ensure_stamps(repo, log_path):
-    """Submit anything unsubmitted; sync submitted entries toward confirmation."""
-    if not HAVE_OTS:
-        print("⚠️  python-opentimestamps not installed - entries recorded, stamps deferred")
+    if not ots_cli():
         return
     entries = load_log(log_path)
     changed = False
@@ -184,42 +157,35 @@ def ensure_stamps(repo, log_path):
         manifest = repo / e["manifest"]
         ots = Path(str(manifest) + ".ots")
         if not manifest.exists():
-            print("❌ #" + format(e["seq"], "04d") + ": manifest file missing")
+            print("error #" + format(e["seq"], "04d") + ": manifest file missing")
             continue
         if not ots.exists():
-            detached = DetachedTimestampFile.from_bytes(OpSHA256(), manifest.read_bytes())
-            ok = 0
-            for url in CALENDARS:
-                try:
-                    RemoteCalendar(url).commit(detached.timestamp)
-                    ok += 1
-                except Exception as ex:
-                    print("⚠️  " + url + ": " + str(ex))
-                if not ok:
-                    continue
-                _save_ots(detached, ots)
+            r = run_ots("stamp", str(manifest))
+            if ots.exists():
                 e["status"] = "pending"
                 changed = True
-                print("📤 #" + format(e["seq"], "04d") + " submitted to " + str(ok) + " calendar(s)")
+                info = parse_info(info_for(ots))
+                print("submitted #" + format(e["seq"], "04d") + " (digest " + (info["digest"] or "?")[:12] + ")")
+            else:
+                tail = (r.stderr or r.stdout or "").strip().splitlines()
+                print("stamp failed #" + format(e["seq"], "04d") + ": " + (tail[-1] if tail else "unknown"))
         elif e["status"] != "confirmed":
-            detached = _load_ots(ots)
-            if _has_bitcoin(detached):
+            run_ots("upgrade", str(ots))
+            info = parse_info(info_for(ots))
+            if e["status"] == "unsubmitted":
+                e["status"] = "pending"
+                changed = True
+            if info["digest"] and info["digest"] != e["manifest_sha256"]:
+                print("error #" + format(e["seq"], "04d") + ": .ots covers different bytes than the log claims")
+            if info["confirmed"]:
                 e["status"] = "confirmed"
                 e["confirmed_at"] = now()
+                if info["height"]:
+                    e["height"] = info["height"]
                 changed = True
-                print("⛓️  #" + format(e["seq"], "04d") + " confirmed in Bitcoin")
+                print("confirmed #" + format(e["seq"], "04d") + " in Bitcoin (block " + str(info["height"] or "?") + ")")
             else:
-                for url in CALENDARS:
-                    try:
-                        RemoteCalendar(url).sync_timestamp(detached.timestamp)
-                    except Exception:
-                        pass
-                if _has_bitcoin(detached):
-                    _save_ots(detached, ots)
-                    e["status"] = "confirmed"
-                    e["confirmed_at"] = now()
-                    changed = True
-                    print("⛓️  #" + format(e["seq"], "04d") + " confirmed in Bitcoin")
+                print("pending #" + format(e["seq"], "04d") + " - not yet in a Bitcoin block")
     if changed:
         rewrite_log(log_path, entries)
 
@@ -242,14 +208,14 @@ def milestone(repo, anchors_dir, log_path, tag, message):
         if e["git_head"] == head:
             entry = e
     if entry:
-        print("⏭️  HEAD already anchored as #" + format(entry["seq"], "04d") + " - tagging existing anchor")
+        print("skip: HEAD already anchored #" + format(entry["seq"], "04d") + " - tagging existing anchor")
     else:
         entry = make_anchor(repo, anchors_dir, log_path)
         if entry is None:
-            sys.exit("❌ could not anchor HEAD")
-    tag_msg = ("milestone: " + message + "\n" + "anchor: " + entry["anchor_id"] + "\n" + "manifest_sha256: " + entry["manifest_sha256"] + "\n" + "git_head: " + entry["git_head"])
+            sys.exit("error: could not anchor HEAD")
+    tag_msg = "milestone: " + message + "\nanchor: " + entry["anchor_id"] + "\nmanifest_sha256: " + entry["manifest_sha256"] + "\ngit_head: " + entry["git_head"]
     sh("git", "tag", "-a", tag, "-m", tag_msg, head, cwd=repo)
-    print("🏷️  " + tag + " -> " + head[:12] + " (anchor #" + format(entry["seq"], "04d") + ")")
+    print("tag " + tag + " -> " + head[:12] + " (anchor #" + format(entry["seq"], "04d") + ")")
 
 
 def verify(repo, log_path):
@@ -259,33 +225,34 @@ def verify(repo, log_path):
         return True
     ok = True
     prev_hash = None
+    cli = ots_cli()
     for e in entries:
         if e.get("prev") != prev_hash:
-            print("❌ #" + format(e["seq"], "04d") + ": chain broken (prev mismatch)")
+            print("error #" + format(e["seq"], "04d") + ": chain broken (prev mismatch)")
             ok = False
         prev_hash = core_hash(e)
         m = repo / e["manifest"]
         if not m.exists():
-            print("❌ #" + format(e["seq"], "04d") + ": manifest missing")
+            print("error #" + format(e["seq"], "04d") + ": manifest missing")
             ok = False
             continue
         if sha256_file(m) != e["manifest_sha256"]:
-            print("❌ #" + format(e["seq"], "04d") + ": manifest digest mismatch - tampered?")
+            print("error #" + format(e["seq"], "04d") + ": manifest digest mismatch - tampered?")
             ok = False
         ots = Path(str(m) + ".ots")
         if e["status"] != "unsubmitted" and not ots.exists():
-            print("❌ #" + format(e["seq"], "04d") + ": status " + e["status"] + " but no .ots file")
+            print("error #" + format(e["seq"], "04d") + ": status " + e["status"] + " but no .ots file")
             ok = False
-        if ots.exists() and HAVE_OTS:
-            detached = _load_ots(ots)
-            digest = _digest_hex(detached)
-            if digest and digest != e["manifest_sha256"]:
-                print("❌ #" + format(e["seq"], "04d") + ": .ots stamps different bytes than the log claims")
-                ok = False
-            if _has_bitcoin(detached):
-                for a in detached.timestamp.attestations:
-                    if isinstance(a, BitcoinAttestation):
-                        print("  ⛓️  #" + format(e["seq"], "04d") + " attested at Bitcoin block " + str(a.height))
+        if ots.exists():
+            if cli:
+                info = parse_info(info_for(ots))
+                if info["digest"] and info["digest"] != e["manifest_sha256"]:
+                    print("error #" + format(e["seq"], "04d") + ": .ots covers different bytes than the log claims")
+                    ok = False
+                if info["confirmed"]:
+                    print("  #" + format(e["seq"], "04d") + " attested at Bitcoin block " + str(info["height"] or "?"))
+            else:
+                print("  #" + format(e["seq"], "04d") + ": .ots present (ots CLI absent - digest check skipped)")
     n_conf = 0
     for e in entries:
         if e["status"] == "confirmed":
@@ -295,18 +262,16 @@ def verify(repo, log_path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Continuous priority anchoring for the syndicate vault.")
+    ap = argparse.ArgumentParser(description="Continuous priority anchoring for the syndicate vault (ots CLI).")
     ap.add_argument("command", choices=["run", "upgrade", "verify", "milestone"])
     ap.add_argument("--repo", type=Path, default=Path("."))
     ap.add_argument("--tag", help="tag name for milestone (e.g. v0.1-preprint)")
     ap.add_argument("--message", "-m", help="milestone description")
     args = ap.parse_args()
-
     repo = args.repo.resolve()
     anchors_dir = repo / "ledger" / "anchors"
     anchors_dir.mkdir(parents=True, exist_ok=True)
     log_path = anchors_dir / "log.jsonl"
-
     if args.command == "run":
         make_anchor(repo, anchors_dir, log_path)
         ensure_stamps(repo, log_path)
@@ -319,10 +284,9 @@ def main():
         ensure_stamps(repo, log_path)
     elif args.command == "verify":
         return 0 if verify(repo, log_path) else 1
-
     stale = stale_unsubmitted(log_path)
     if stale:
-        print("❌ anchors " + str(stale) + " unsubmitted for >" + str(STALE_DAYS) + " days - calendars unreachable?")
+        print("error: anchors " + str(stale) + " unsubmitted for more than " + str(STALE_DAYS) + " days")
         return 1
     return 0
 

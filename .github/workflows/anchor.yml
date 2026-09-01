@@ -46,4 +46,5 @@ jobs:
       - name: commit and push
         run: |
           git add ledger/anchors/
-          git diff --cached --quiet || (git commit -m "anchor: state stamp [skip ci]" && git push origin "HEAD:${{ github.ref_name }}" --follow-tags)
+          git diff --cached --quiet || (git commit -m "anchor: state stamp [skip ci]"
+          for i in 1 2 3; do git push origin "HEAD:${{ github.ref_name }}" --follow-tags && exit 0; git fetch origin "${{ github.ref_name }}" && git rebase "origin/${{ github.ref_name }}"; sleep 2; done; exit 1)
