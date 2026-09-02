@@ -1,0 +1,85 @@
+{
+  "clock": "committer dates; push-time gating is the admissible clock per 4.2 (v1 limitation)",
+  "generated_at": "2026-09-02T00:27:10Z",
+  "members": [
+    {
+      "email": "51167247+bigDSanalyst@users.noreply.github.com",
+      "github": "bigDSanalyst",
+      "joined": "2026-08-30",
+      "name": "Test Researcher",
+      "orcid": "0000-0000-0000-0000",
+      "role": "theory",
+      "trust_tier": "verified"
+    },
+    {
+      "email": "205302507+satsolverv124@users.noreply.github.com",
+      "github": "satsolverv124",
+      "joined": "2026-08-30",
+      "name": "Test Engineer",
+      "orcid": "0000-0000-0000-0000",
+      "role": "systems",
+      "trust_tier": "verified"
+    }
+  ],
+  "objection_deadline": "2026-09-09T00:27:10Z",
+  "raw": {
+    "bigDSanalyst": {
+      "churn_w": 1547.6,
+      "files": [
+        ".env.example",
+        ".gitattributes",
+        ".github/CODEOWNERS",
+        ".github/workflows/anchor.yml",
+        ".github/workflows/ingest-arxiv.yml",
+        ".gitignore",
+        ".obsidian/app.json",
+        "LICENSE",
+        "LICENSE-CONTENT.md",
+        "README.md",
+        "agents/mcp.json.template",
+        "agents/queries.yaml",
+        "agreements/EXECUTION-LOG.md",
+        "agreements/consortium-agreement.md",
+        "agreements/pre-existing-ip.md",
+        "bootstrap.sh",
+        "ledger/anchors/0001-2026-08-31.json.ots.bak",
+        "ledger/anchors/0002-2026-09-01.json.ots.bak",
+        "syndicate.yaml",
+        "tools/anchor.py",
+        "tools/ingest_arxiv.py",
+        "tools/requirements.txt",
+        "vault/00-inbox/.gitkeep",
+        "vault/10-literature/.gitkeep",
+        "vault/20-notes/.gitkeep",
+        "vault/30-experiments/.gitkeep",
+        "vault/40-drafts/.gitkeep",
+        "vault/40-drafts/draft-v0.1.md",
+        "vault/50-decisions/.gitkeep",
+        "vault/_templates/.gitkeep",
+        "vault/_templates/paper-note.md",
+        "vault/maps/.gitkeep",
+        "vault/{10-literature => 20-notes}/arXiv_2512_18008 - A warp drive with predominantly positive invariant energy de.md"
+      ],
+      "merges": 0,
+      "reviews": 0
+    },
+    "satsolverv124": {
+      "churn_w": 0.0,
+      "files": [],
+      "merges": 0,
+      "reviews": 1
+    }
+  },
+  "survivor_weight": 0.3,
+  "weights_used": {
+    "breadth": 0.25,
+    "churn": 0.43749999999999994,
+    "review": 0.3125
+  },
+  "window": {
+    "end": "2026-09-01",
+    "label": "2026-W35",
+    "start": "2026-08-30"
+  },
+  "window_head": "ae90c82576e4bd29468a7bd372becbf8d493e416"
+}
