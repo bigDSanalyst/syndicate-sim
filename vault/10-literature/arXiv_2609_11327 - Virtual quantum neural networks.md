@@ -1,0 +1,35 @@
+---
+aliases: ["Virtual quantum neural networks"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2609.11327"
+url: "http://arxiv.org/abs/2609.11327v1"
+published: "2026-09-10T09:56:32Z"
+ingested: "2026-09-11T10:32:59Z"
+authors:
+  - "Benchi Zhao"
+  - "Xuanqiang Zhao"
+  - "Yinan Li"
+  - "Yingzhou Li"
+  - "Giulio Chiribella"
+---
+
+# Virtual quantum neural networks
+
+## Abstract
+
+> Quantum neural networks are a prominent model of quantum machine learning. Their training
+> consists in the minimization of a given loss function over a parametrized family of quantum
+> circuits, mathematically described by unitary operators, or, more generally, completely positive
+> linear maps. In this work, we extend the notion of quantum neural network, using random sampling
+> and classical data processing to enlarge the optimization space in a way that includes linear
+> combinations of completely positive maps. Our extended model, called virtual quantum neural
+> networks, leverages its enlarged optimization space to achieve increased expressivity and
+> improved noise robustness. These benefits are illustrated in three representative tasks: quantum
+> error mitigation, binary classification, and estimation of ground-state energies. Overall,
+> virtual quantum neural networks offer a flexible learning paradigm that expands the space of
+> achievable computations and strengthens the applications of near-term quantum hardware.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
