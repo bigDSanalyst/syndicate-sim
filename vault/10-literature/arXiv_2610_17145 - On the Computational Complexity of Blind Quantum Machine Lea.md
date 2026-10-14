@@ -1,0 +1,42 @@
+---
+aliases: ["On the Computational Complexity of Blind Quantum Machine Learning"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2610.17145"
+url: "http://arxiv.org/abs/2610.17145v1"
+published: "2026-10-12T17:27:35Z"
+ingested: "2026-10-14T11:06:59Z"
+authors:
+  - "Rex Fleur"
+  - "Tzula B. Propp"
+  - "Sebastian Feld"
+---
+
+# On the Computational Complexity of Blind Quantum Machine Learning
+
+## Abstract
+
+> Can quantum advantages in computational efficiency coexist with quantum advantages in privacy?
+> In this paper, we construct and use MasonQ, a universal brickwork transpiler, to answer this
+> question with a resounding yes. We approach this question by bridging two seemingly disparate
+> paradigms: universal blind quantum computation (UBQC), based on measurement-based quantum
+> computation, and quantum machine learning (QML) algorithms such as the Harrow-Hassidim-Lloyd
+> (HHL) algorithm and quantum recommendation systems. We provide new upper bounds on the depth of
+> UBQC brickwork graphs, establishing that $D = \mathcal{O}(ωn)$, where $ω$ is the circuit width
+> and $n$ its computational gate complexity. This is enabled by our newly developed transpiler
+> MasonQ, which maps arbitrary quantum circuits to computational brickwork graph states. Given an
+> optimal Qiskit circuit as input, we prove optimality (up to logarithmic corrections) of the
+> MasonQ transpiler in terms of asymptotic scaling of the total brickwork graph width and depth
+> after decomposition into bricks, enabling systematic cost analyses of blind implementations in
+> near-term experiments and asymptotic regimes. Leveraging MasonQ, we derive depth bounds for
+> several representative blind quantum machine learning (B-QML) algorithms, including the quantum
+> Fourier transform, the HHL algorithm, recommendation systems, and quantum transformers. Lastly,
+> we analyze concrete resource estimates for near-term demonstrations of blind quantum machine
+> learning. We propose a minimal B-QML implementation requiring only a $12$ qubit quantum server.
+> To the best of our knowledge, MasonQ is the first functional and optimal universal circuit-to-
+> brickwork-graph transpiler to implement the full brickwork transpilation process from first
+> principles.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
