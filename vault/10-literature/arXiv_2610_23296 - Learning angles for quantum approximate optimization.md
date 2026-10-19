@@ -1,0 +1,42 @@
+---
+aliases: ["Learning angles for quantum approximate optimization"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2610.23296"
+url: "http://arxiv.org/abs/2610.23296v1"
+published: "2026-10-16T11:02:38Z"
+ingested: "2026-10-19T12:01:38Z"
+authors:
+  - "Johannes Jakubik"
+  - "Isabelle Wittmann"
+  - "Zaheed Gaffoor"
+  - "Gciniwe Simphiwe Baloyi"
+  - "Craig Mahlasi"
+  - "Etienne Vos"
+  - "Thomas Brunschwiler"
+  - "Daniel J. Egger"
+---
+
+# Learning angles for quantum approximate optimization
+
+## Abstract
+
+> The Quantum Approximate Optimization Algorithm (QAOA) and its variants are leading algorithms to
+> help solve challenging combinatorial optimization problems. QAOA maps these problems to Ising
+> Hamiltonians such that their ground state is the desired solution. Candidate solutions are then
+> drawn from a variational quantum circuit. The performance of QAOA hinges on a set of variational
+> angles. However, finding good angles is an instance-specific and computationally expensive non-
+> convex classical optimization task. Here, we learn the mapping from the problem instance to
+> high-quality QAOA angles. Our learned models replace the per-instance optimization, that we call
+> the solver, with a single forward pass that is several orders of magnitude faster than the
+> solver with a near identical quality. Our models further generalize to unseen topologies such as
+> Barabási-Albert and 2D grid graphs. Experiments on quantum hardware confirm that QAOA samples
+> with angles produced by our open-source models are indistinguishable from solver angles.
+> Crucially, models sensitive to the topology of the problem instance increase the quality of the
+> QAOA angles. Our work amortizes a major bottleneck in QAOA by an up-front data generation and
+> training cost. Importantly, this cost can be amortized over time in settings where many similar
+> problems are optimized on a regular basis, as is often the case in applications for industry.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
