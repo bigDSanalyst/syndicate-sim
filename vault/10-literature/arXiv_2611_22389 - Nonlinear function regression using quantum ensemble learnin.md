@@ -1,0 +1,36 @@
+---
+aliases: ["Nonlinear function regression using quantum ensemble learning"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2611.22389"
+url: "http://arxiv.org/abs/2611.22389v1"
+published: "2026-11-17T08:40:31Z"
+ingested: "2026-11-18T15:01:54Z"
+authors:
+  - "Yueen Chen"
+  - "Mohammad Sharifian"
+  - "Abolfazl Bayat"
+---
+
+# Nonlinear function regression using quantum ensemble learning
+
+## Abstract
+
+> Recent advances in artificial intelligence and quantum technologies have driven the emergence of
+> quantum machine learning, yet imperfections in near-term quantum devices remain a major obstacle
+> for achieving practical quantum advantage. In the absence of fault-tolerant machines, ensemble
+> learning, which combines multiple imperfect quantum devices, may unlock new quantum computing
+> applications. Here, we introduce two ensemble-learning algorithms, namely Bagging and AdaBoost,
+> for enhancing the accuracy of nonlinear regression problems. While Bagging trains variational
+> quantum regressors independently, AdaBoost employs a sequential training strategy and achieves
+> significantly better prediction accuracy. By incorporating systematic feature selection into our
+> ensemble learning algorithms, we enhance their predictive power for highly nonlinear functions.
+> We further improve prediction accuracy through a feature-to-qubit mapping strategy based on
+> repeated feature encoding. The performance of our ensemble-based algorithms improves with both
+> the number of regressors in the ensemble and the size of each regressor. We demonstrate the
+> effectiveness of our approach using four benchmarking functions with varying degrees of
+> nonlinearity by relying on a feature pool limited to first- and second-order polynomial terms.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
