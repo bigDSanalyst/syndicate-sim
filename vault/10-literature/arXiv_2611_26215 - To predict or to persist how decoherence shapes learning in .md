@@ -1,0 +1,36 @@
+---
+aliases: ["To predict or to persist: how decoherence shapes learning in a spin-qubit quantum reservoir"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2611.26215"
+url: "http://arxiv.org/abs/2611.26215v1"
+published: "2026-11-19T14:52:30Z"
+ingested: "2026-11-23T17:17:41Z"
+authors:
+  - "Nikolaos Petropoulos"
+  - "Elena Blokhina"
+---
+
+# To predict or to persist: how decoherence shapes learning in a spin-qubit quantum reservoir
+
+## Abstract
+
+> In this work we investigate how dephasing and the choice of measured observables affect learning
+> in a simulated six-qubit spin chain with Markovian dissipation and exact expectation-value
+> readout. For externally driven nonlinear autoregressive moving-average signals, combining
+> single- and two-qubit observables gives better predictions than a population-only readout at
+> comparable polynomial feature counts. Most of the configurations we tested become more accurate
+> than a reference with relaxation and dephasing disabled, most strongly at $T_2=1\,μ$s, where
+> total memory capacity drops, and still at $T_2=5$-$10\,μ$s, where memory is only redistributed
+> across delays. For autonomous generation, we train the readout with scheduled sampling and
+> iterative dataset aggregation to expose it to states reached under its own feedback. We do not
+> find a clear systematic dependence of limit-cycle persistence on coherence across the reservoir
+> ensemble. For chaotic forecasting, in contrast, prediction horizons at $T_2=1\,μ$s shorten in
+> all 10 reservoir realizations relative to that reference. For the noise-driven strange non-
+> chaotic attractor, the model produces a smooth, approximately closed orbit, and neither captures
+> the target's scatter nor follows its trajectory pointwise. We conclude that, within this
+> simulated reservoir, the impact of coherence depends strongly on the task.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
