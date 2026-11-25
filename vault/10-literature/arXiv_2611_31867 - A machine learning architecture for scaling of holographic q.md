@@ -1,0 +1,35 @@
+---
+aliases: ["A machine learning architecture for scaling of holographic quantum circuits"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2611.31867"
+url: "http://arxiv.org/abs/2611.31867v1"
+published: "2026-11-24T03:18:06Z"
+ingested: "2026-11-25T16:44:39Z"
+authors:
+  - "Cliff Sun"
+  - "Michael L. Wall"
+---
+
+# A machine learning architecture for scaling of holographic quantum circuits
+
+## Abstract
+
+> We describe an architecture and workflow for learning and generalizing the syntax and parameters
+> of holographic quantum circuits (HQCs), which are natural quantum circuit analogs of classical
+> tensor networks. An HQC uses mid-circuit measurements and resets on a small subset of "physical"
+> qubits whose measurement outcomes become correlated through coupling with a register of
+> persistent "ancilla" qubits, analogous to the physical and bond indices of a tensor network.
+> Hence, an HQC with fixed qubit resources can efficiently generate samples from a large quantum
+> state, and adding qubits to the HQC ansatz has the effect of exponentially increasing the
+> effective bond dimension. Our machine learning approach provides mechanisms for harnessing both
+> features of HQCs by extrapolating the syntax (e.g., a sequence of gates, measurements, and
+> resets) and parameters (e.g., the angles appearing in single-qubit rotations) from a dataset of
+> HQCs to longer or more expressive HQCs. We demonstrate the methodology and its performance on an
+> analytically solvable dataset formed by a vector-valued generalization of the W-state. Finally,
+> we provide an outlook for usage of the methodology for scaling the effective bond dimensions of
+> HQCs in quantum simulation.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
