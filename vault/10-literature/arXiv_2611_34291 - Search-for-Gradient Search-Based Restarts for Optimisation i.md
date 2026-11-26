@@ -1,0 +1,42 @@
+---
+aliases: ["Search-for-Gradient: Search-Based Restarts for Optimisation in Structured Flat Landscapes of Variational Quantum Algorithms"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2611.34291"
+url: "http://arxiv.org/abs/2611.34291v1"
+published: "2026-11-25T12:43:48Z"
+ingested: "2026-11-26T16:19:43Z"
+authors:
+  - "Subham Das"
+  - "Bikash K. Behera"
+  - "Andrés Camilo Granda Arango"
+  - "Giuseppe Sergioli"
+  - "Roberto Giuntini"
+---
+
+# Search-for-Gradient: Search-Based Restarts for Optimisation in Structured Flat Landscapes of Variational Quantum Algorithms
+
+## Abstract
+
+> Variational Quantum Algorithms (VQAs) are a promising class of hybrid quantum-classical
+> algorithms that involve parameterised quantum circuits and classical optimisation. VQAs have
+> found applications in simulation, optimisation, and machine learning. However, their scalability
+> is hindered by flat landscapes-regions in the parameter space where gradients vanish
+> exponentially small. In such regimes, gradient-based optimisation methods fail because parameter
+> updates become ineffective in the absence of informative gradients. In this work, we propose a
+> search-based restart framework to escape flat regions in structured flat landscapes, in which
+> small trainable regions exist within a large flat landscape. This framework approaches the
+> plateau escape as a search problem and locates trainable regions. The optimiser's parameters
+> stop updating when the gradients vanish, and the method then searches over-sampled points to
+> identify landscapes with nonzero gradients. We provide theoretical estimates of the number of
+> jumps and the probability of escape from flat landscapes. This restarts the local optimisation
+> process and avoids stagnation. We tested this framework on synthetic functions that mimic
+> structured flat landscapes and a real quantum circuit cost landscape. Theoretical analysis and
+> experimental results demonstrate that Search-for-Gradient improves optimisation performance in
+> structured flat landscapes. The proposed framework assumes the existence of a trainable region
+> with nonzero measure and will not work if it has zero measure. Our framework can be integrated
+> with existing VQAs to improve trainability and robustness.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+

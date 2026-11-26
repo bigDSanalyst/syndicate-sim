@@ -1,0 +1,43 @@
+---
+aliases: ["LatentRL-QAS: Transfer via Latent Reinforcement Learning for Quantum Architecture Search"]
+tags: [literature/arxiv, status/triage]
+arxiv_id: "2611.34634"
+url: "http://arxiv.org/abs/2611.34634v1"
+published: "2026-11-25T16:20:02Z"
+ingested: "2026-11-26T16:19:43Z"
+authors:
+  - "Maria Ilektra Plakitsi"
+  - "Sebastian Feld"
+  - "Akash Kundu"
+---
+
+# LatentRL-QAS: Transfer via Latent Reinforcement Learning for Quantum Architecture Search
+
+## Abstract
+
+> Reinforcement learning (RL) emerges as a prominent approach to quantum architecture search
+> (QAS), the automated design of quantum circuits. However, transferring what an agent has learned
+> from one number of qubits to another is still weakly explored: the state, the action space and
+> the neural network of a state-of-the-art RL-QAS agent all grow with the number of qubits, which
+> makes transfer learning across qubit counts prohibitive. We make this transfer possible by
+> introducing LatentRL-QAS, a latent space transfer and refresh framework for RL-based QAS. At its
+> core, a circuit variational autoencoder encodes a circuit as one token per gate and maps
+> circuits on any number of qubits into the same latent space. An RL agent navigates this space
+> instead of adding gates, so its state, actions and network have the same size at every qubit
+> count. The latent space is periodically refreshed with the agent's new discoveries and, for a
+> larger system, grown from the solutions of the smaller one, so what is transferred is the
+> representation of circuits, not network weights or past experience. To show transfer, we
+> consider absolutely maximally entangled (AME) states, a resource for quantum error correction.
+> LatentRL-QAS discovers the five- and six-qubit AME states without being shown them and prepares
+> them in 89-99% of evaluation episodes, whereas the baseline RL-QAS fails to find them with the
+> same budget, even with a network 10 to 17 times larger. LatentRL-QAS remains robust under
+> depolarizing noise with single-qubit gate errors amplified 10x and two-qubit gate errors 5x
+> compared with IBM quantum hardware. By decoupling the RL agent from the number of qubits,
+> LatentRL-QAS lets quantum architecture search reuse circuit representations learned on smaller
+> problems, providing a foundation for the transferable design of circuits across quantum
+> optimization problems.
+
+---
+## Reading Notes
+*Annotations below. Update the status tag as you triage; the arxiv_id frontmatter must survive edits - it is the dedup key.*
+
